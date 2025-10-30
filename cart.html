@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Keranjang | GreenShop</title>
+<link rel="stylesheet" href="style.css">
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#e7f7e5;}
+.container{max-width:700px; margin:120px auto 40px auto; background:white; padding:20px; border-radius:15px; box-shadow:0 4px 10px rgba(0,0,0,0.15);}
+.cart-item{display:flex; align-items:center; justify-content:space-between; background:#f1f9f2; padding:10px; border-radius:10px; margin-bottom:10px;}
+.cart-item img{width:80px; border-radius:10px; border:3px solid #1b5e20;}
+.cart-item div{flex:1; margin-left:15px;}
+.cart-item input[type=number]{width:60px; padding:5px; border-radius:10px; border:1px solid #ccc;}
+.cart-item button{padding:5px 10px; border:none; border-radius:10px; background:#1b5e20; color:white; cursor:pointer;}
+.cart-item button:hover{background:#2f8a3e;}
+.total{text-align:right; font-weight:bold; margin-top:10px;}
+button.checkout-btn{background:#1b5e20;color:white;border:none;border-radius:20px;padding:10px 20px;cursor:pointer;margin-top:15px;}
+button.checkout-btn:hover{background:#2f8a3e;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header style="
+  background:#1b5e20;
+  color:white;
+  padding:10px 20px;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  z-index:1000;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  box-sizing:border-box;
+">
+  <div style="font-size:20px;font-weight:bold;">🛍️ GreenShop</div>
+  <div style="display:flex;gap:10px;">
+    <button onclick="location.href='index.html'" style="padding:5px 12px;border:none;border-radius:10px;cursor:pointer;">Beranda</button>
+    <button id="loginBtn" style="padding:5px 12px;border:none;border-radius:10px;cursor:pointer;">Masuk</button>
+  </div>
+</header>
+
+<div class="container">
+  <h2>Keranjang Anda</h2>
+  <div id="cartList"></div>
+  <div class="total" id="totalHarga"></div>
+  <button class="checkout-btn" onclick="checkout()">Checkout</button>
+</div>
+
+<script>
+// Login check
+const user = JSON.parse(localStorage.getItem("loggedUser"));
+const loginBtn = document.getElementById("loginBtn");
+if(user){
+  loginBtn.innerHTML = `👤 ${user.nama}`;
+  loginBtn.onclick = ()=>{ 
+    if(confirm("Keluar dari akun?")){
+      localStorage.removeItem("loggedUser");
+      location.reload();
+    }
+  };
+}
+
+// Load cart
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+const cartList = document.getElementById("cartList");
+
+function renderCart(){
+  cartList.innerHTML="";
+  let total = 0;
+  cart.forEach((p, idx)=>{
+    total += (p.harga * (p.jumlah || 1));
+    cartList.innerHTML += `
+      <div class="cart-item">
+        <input type="checkbox" class="check" data-idx="${idx}" checked>
+        <img src="${p.gambar}" alt="${p.nama}">
+        <div>
+          <h4>${p.nama}</h4>
+          <p>Rp ${(p.harga*(p.jumlah||1)).toLocaleString()}</p>
+          <label>Jumlah: <input type="number" min="1" value="${p.jumlah || 1}" onchange="updateQty(${idx}, this.value)"></label>
+        </div>
+        <button onclick="removeItem(${idx})">Hapus</button>
+      </div>
+    `;
+  });
+  document.getElementById("totalHarga").textContent = "Total: Rp "+total.toLocaleString();
+}
+
+function removeItem(idx){
+  cart.splice(idx,1);
+  localStorage.setItem("cart",JSON.stringify(cart));
+  renderCart();
+}
+
+function updateQty(idx,value){
+  const val = parseInt(value);
+  if(val>0){
+    cart[idx].jumlah = val;
+    localStorage.setItem("cart",JSON.stringify(cart));
+    renderCart();
+  }
+}
+
+function checkout(){
+  const checkboxes = document.querySelectorAll(".check");
+  const selected = [];
+  checkboxes.forEach(cb=>{
+    if(cb.checked){
+      const idx = parseInt(cb.dataset.idx);
+      selected.push(cart[idx]);
+    }
+  });
+  if(selected.length===0){
+    alert("Pilih minimal satu produk!");
+    return;
+  }
+  localStorage.setItem("checkoutData",JSON.stringify(selected));
+  location.href="checkout.html";
+}
+
+renderCart();
+</script>
+</body>
+</html>

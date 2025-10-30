@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout | GreenShop</title>
+<link rel="stylesheet" href="style.css">
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#e7f7e5;}
+.container{max-width:700px; margin:120px auto 40px auto; background:white; padding:20px; border-radius:15px; box-shadow:0 4px 10px rgba(0,0,0,0.15);}
+.address-box{background:#f1f9f2; padding:10px; border-radius:10px; margin-bottom:15px;}
+.order-item{padding:10px; border-bottom:1px solid #ccc;}
+.total{text-align:right; font-weight:bold; margin-top:15px;}
+select, input{width:100%; padding:8px; margin:5px 0; border-radius:10px; border:1px solid #ccc;}
+button{padding:10px 15px; border:none; border-radius:20px; background:#1b5e20; color:white; cursor:pointer; margin-top:10px;}
+button:hover{background:#2f8a3e;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header style="
+  background:#1b5e20;
+  color:white;
+  padding:10px 20px;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  z-index:1000;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  box-sizing:border-box;
+">
+  <div style="font-size:20px;font-weight:bold;">Checkout | GreenShop</div>
+  <div style="display:flex;gap:10px;">
+    <button onclick="location.href='index.html'" style="padding:5px 12px;border:none;border-radius:10px;cursor:pointer;">Beranda</button>
+  </div>
+</header>
+
+<div class="container">
+  <h2>Checkout</h2>
+  
+  <div class="address-box" id="addressBox"></div>
+  
+  <h3>Ringkasan Pesanan</h3>
+  <div id="orderList"></div>
+  <div class="total" id="totalHarga"></div>
+
+  <h3>Voucher Diskon</h3>
+  <input type="text" id="voucher" placeholder="Masukkan kode voucher (opsional)">
+
+  <h3>Metode Pembayaran</h3>
+  <select id="paymentMethod">
+    <option value="cod">COD (Bayar di Tempat)</option>
+    <option value="bank">Transfer Bank</option>
+    <option value="qris">QRIS</option>
+    <option value="alfamart">Alfamart / Alfamidi</option>
+  </select>
+
+  <button onclick="prosesPesan()">Pesan Sekarang</button>
+</div>
+
+<script>
+// login check
+const user = JSON.parse(localStorage.getItem("loggedUser"));
+const loginBtn = document.getElementById("loginBtn");
+if(user){
+  loginBtn.innerHTML = `👤 ${user.nama}`;
+  loginBtn.onclick = ()=>{ 
+    if(confirm("Keluar dari akun?")){
+      localStorage.removeItem("loggedUser");
+      location.reload();
+    }
+  };
+}
+
+// tampilkan alamat
+const addressBox = document.getElementById("addressBox");
+if(user){
+  addressBox.innerHTML = `<b>Alamat Pengiriman:</b><br>${user.alamat}<br>${user.telepon}<br>${user.email}`;
+}else{
+  addressBox.innerHTML = "Silakan login terlebih dahulu.";
+}
+
+// tampilkan pesanan
+const checkoutData = JSON.parse(localStorage.getItem("checkoutData")) || [];
+const orderList = document.getElementById("orderList");
+let total = 0;
+checkoutData.forEach(p=>{
+  const jumlah = p.jumlah || 1;
+  const subtotal = p.harga * jumlah;
+  total += subtotal;
+  orderList.innerHTML += `<div class="order-item">${p.nama} (${jumlah}x) - Rp ${subtotal.toLocaleString('id-ID')}</div>`;
+});
+document.getElementById("totalHarga").textContent = "Total: Rp "+total.toLocaleString('id-ID');
+
+// proses pesan
+function prosesPesan(){
+  if(!user){
+    alert("Silakan login terlebih dahulu!");
+    return;
+  }
+  const metode = document.getElementById("paymentMethod").value;
+  localStorage.setItem("totalBayar", total);
+
+  if(metode==="cod"){
+    location.href="pesanan_berhasil.html";
+  }else if(metode==="qris"){
+    location.href="pembayaran_qris.html";
+  }else if(metode==="bank"){
+    location.href="pembayaran_bank.html";
+  }else if(metode==="alfamart"){
+    location.href="pembayaran_alfamart.html";
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GreenShop | Beranda</title>
+<link rel="stylesheet" href="style.css">
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#e7f7e5;}
+.products{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;padding:20px;}
+.product-card{background:white;border-radius:15px;box-shadow:0 4px 8px rgba(0,0,0,0.1);padding:10px;width:180px;text-align:center;}
+.product-card img{width:100%;border-radius:10px;border:3px solid #1b5e20;}
+.product-card h3{margin:10px 0 5px;color:#1b5e20;}
+.product-card p{margin:5px 0;font-weight:bold;color:#2f8a3e;}
+.product-card button{background:#1b5e20;color:white;border:none;padding:6px 12px;border-radius:10px;cursor:pointer;}
+.product-card button:hover{background:#2f8a3e;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header style="
+  background:#1b5e20;
+  color:white;
+  padding:10px 20px;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  z-index:1000;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  box-sizing:border-box;
+">
+  <div style="font-size:20px;font-weight:bold;">🛍️ GreenShop</div>
+  <div style="display:flex;gap:10px;">
+    <button id="cartBtn" onclick="location.href='cart.html'" style="padding:5px 12px;border:none;border-radius:10px;cursor:pointer;">🛒 Keranjang</button>
+    <button id="loginBtn" onclick="location.href='login.html'" style="padding:5px 12px;border:none;border-radius:10px;cursor:pointer;">Masuk</button>
+  </div>
+</header>
+
+<h2 style="text-align:center; color:#1b5e20; margin-top:70px;">🌿 Produk Pilihan Kami 🌿</h2>
+
+<div class="products" id="productList"></div>
+
+<script>
+const products = [
+  {id:1, nama:"Tanaman Monstera", harga:85000, gambar:"daun.jpeg"},
+  {id:2, nama:"Pupuk Organik 1kg", harga:25000, gambar:"pupuk.jpeg"},
+  {id:3, nama:"Pot Keramik Elegan", harga:45000, gambar:"pot.jpeg"},
+  {id:4, nama:"Bibit Cabe Rawit", harga:15000, gambar:"bibit.jpeg"},
+  {id:5, nama:"Tanaman Lidah Mertua", harga:75000, gambar:"lidah.jpeg"},
+  {id:6, nama:"Sirih Gading Gantung", harga:68000, gambar:"sirih.jpeg"},
+  {id:7, nama:"Media Tanam 5kg", harga:30000, gambar:"media.jpeg"},
+  {id:8, nama:"Pupuk Kompos", harga:20000, gambar:"kompos.jpeg"},
+  {id:9, nama:"Tanaman Lavender", harga:90000, gambar:"lavender.jpeg"},
+  {id:10, nama:"Penyiram Air Mini", harga:55000, gambar:"air.jpeg"},
+  {id:11, nama:"Pupuk Daun Cair", harga:33000, gambar:"daunp.jpeg"},
+  {id:12, nama:"Tanaman Kaktus Mini", harga:40000, gambar:"kaktus.jpeg"},
+  {id:13, nama:"Pot Gantung Rotan", harga:38000, gambar:"potb.jpeg"},
+  {id:14, nama:"Bibit Bunga Matahari", harga:12000, gambar:"bibitm.jpeg"},
+  {id:15, nama:"Pot Plastik Besar", harga:27000, gambar:"potgede.jpeg"},
+  {id:16, nama:"Tanaman Anggrek Ungu", harga:95000, gambar:"anggrek.jpeg"},
+  {id:17, nama:"Pupuk NPK 2kg", harga:42000, gambar:"npk.jpeg"},
+  {id:18, nama:"Pot Batu Alam", harga:85000, gambar:"batu.jpeg"},
+  {id:19, nama:"Tanaman Bonsai Mini", harga:110000, gambar:"bonsai.jpeg"},
+  {id:20, nama:"Tanaman Sukulen", harga:60000, gambar:"sukulen.jpeg"},
+  {id:21, nama:"Tanaman Philodendron", harga:80000, gambar:"philodendron.jpeg"},
+  {id:22, nama:"Pupuk Organik Cair 500ml", harga:35000, gambar:"cair.jpeg"},
+  {id:23, nama:"Pot Kayu Minimalis", harga:50000, gambar:"potk.jpeg"},
+  {id:24, nama:"Tanaman Alocasia", harga:95000, gambar:"alocasia.jpeg"},
+];
+
+const productList = document.getElementById("productList");
+products.forEach(p => {
+  const div = document.createElement("div");
+  div.className = "product-card";
+  div.innerHTML = `
+    <img src="${p.gambar}" alt="${p.nama}">
+    <h3>${p.nama}</h3>
+    <p>Rp ${p.harga.toLocaleString('id-ID')}</p>
+    <button onclick="viewDetail(${p.id})">Detail Produk</button>
+  `;
+  productList.appendChild(div);
+});
+
+function viewDetail(id){
+  localStorage.setItem("selectedProduct", JSON.stringify(products.find(p=>p.id===id)));
+  location.href = "product.html";
+}
+
+// login check
+const user = JSON.parse(localStorage.getItem("loggedUser"));
+if(user){
+  const btn = document.getElementById("loginBtn");
+  btn.innerHTML = `👤 ${user.nama}`;
+  btn.onclick = ()=>{ 
+    if(confirm("Keluar dari akun?")){
+      localStorage.removeItem("loggedUser");
+      location.reload();
+    }
+  };
+}
+</script>
+</body>
+</html>

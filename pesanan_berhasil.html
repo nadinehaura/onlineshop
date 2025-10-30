@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pesanan Berhasil | GreenShop</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.container{
+  max-width:400px;
+  margin:60px auto;
+  background:white;
+  padding:30px;
+  border-radius:15px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.15);
+  text-align:center;
+}
+button{
+  padding:10px 15px;
+  border:none;
+  border-radius:20px;
+  background:#1b5e20;
+  color:white;
+  cursor:pointer;
+  margin-top:20px;
+}
+button:hover{background:#2f8a3e;}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>🎉 Pesanan Berhasil!</h2>
+  <p>Terima kasih telah berbelanja di GreenShop.</p>
+  <button onclick="location.href='index.html'">Kembali ke Beranda</button>
+</div>
+
+<script>
+// Kosongkan keranjang & checkout
+localStorage.removeItem("cart");
+localStorage.removeItem("checkoutData");
+</script>
+
+</body>
+</html>

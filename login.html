@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login | GreenShop</title>
+<style>
+  body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(135deg, #e0ffe0, #ffffff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  .login-box {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    width: 350px;
+  }
+  h2 {
+    text-align: center;
+    color: #2e8b57;
+    margin-bottom: 20px;
+  }
+  input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  button {
+    background: #2e8b57;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px;
+    width: 100%;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  button:hover {
+    background: #46a86b;
+  }
+  .msg {
+    text-align: center;
+    color: red;
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+  .success {
+    color: #2e8b57;
+  }
+</style>
+</head>
+<body>
+
+<div class="login-box">
+  <h2>Masuk ke GreenShop</h2>
+
+  <div id="message" class="msg"></div>
+
+  <input type="text" id="email" placeholder="Username" required>
+  <input type="password" id="password" placeholder="Password" required>
+  <input type="text" id="telepon" placeholder="Nomor Telepon (daftar)">
+  <input type="text" id="alamat" placeholder="Alamat Rumah (daftar)">
+  
+  <button onclick="login()">Masuk / Daftar</button>
+</div>
+
+<script>
+  // Jika sudah login, langsung ke halaman utama
+  const existingUser = JSON.parse(localStorage.getItem("loggedUser"));
+  if (existingUser && existingUser.email) {
+    window.location.href = "index.html";
+  }
+
+  function login() {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const telepon = document.getElementById("telepon").value.trim();
+    const alamat = document.getElementById("alamat").value.trim();
+    const message = document.getElementById("message");
+
+    if (!email || !password) {
+      message.textContent = "Email dan password wajib diisi!";
+      return;
+    }
+
+    // Simpan data user ke localStorage
+    const userData = {
+      nama: email.split("@")[0], // ambil nama dari email
+      email: email,
+      password: password,
+      telepon: telepon || "-",
+      alamat: alamat || "-"
+    };
+    
+    localStorage.setItem("loggedUser", JSON.stringify(userData));
+
+    message.textContent = "Login berhasil! Mengalihkan...";
+    message.classList.add("success");
+
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 1200);
+  }
+</script>
+
+</body>
+</html>

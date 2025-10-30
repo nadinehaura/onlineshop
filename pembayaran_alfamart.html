@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pembayaran Alfamart | GreenShop</title>
+<link rel="stylesheet" href="style.css">
+<style>
+/* Header */
+header{
+  background:#1b5e20;
+  color:white;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 20px;
+  box-shadow:0 2px 5px rgba(0,0,0,0.2);
+}
+header h1{margin:0; font-size:20px;}
+header div button{
+  background:white;
+  color:#1b5e20;
+  border:none;
+  border-radius:20px;
+  padding:8px 16px;
+  cursor:pointer;
+  margin-left:10px;
+}
+header div button:hover{background:#2f8a3e; color:white;}
+
+/* Container */
+.container{
+  max-width:400px;
+  margin:60px auto;
+  background:white;
+  padding:20px;
+  border-radius:15px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.15);
+  text-align:center;
+}
+img{width:200px;margin:20px 0;}
+button{padding:10px 15px;border:none;border-radius:20px;background:#1b5e20;color:white;cursor:pointer;}
+button:hover{background:#2f8a3e;}
+</style>
+</head>
+<body>
+
+<header style="
+  background:#1b5e20;
+  color:white;
+  padding:10px 20px;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  z-index:1000;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  box-sizing:border-box;
+">
+  <div style="font-size:20px;font-weight:bold;">🛍️ GreenShop</div>
+  <div style="display:flex;gap:10px;">
+    <button onclick="location.href='cart.html'" style="padding:5px 12px;border:none;border-radius:10px;cursor:pointer;">🛒 Keranjang</button>
+    <button onclick="location.href='index.html'" style="padding:5px 12px;border:none;border-radius:10px;cursor:pointer;">Beranda</button>
+  </div>
+</header>
+
+<div class="container">
+  <h2>Pembayaran Alfamart / Alfamidi</h2>
+  <p>Serahkan kode berikut ke kasir:</p>
+  <img src="alfamart.jpeg" alt="Alfamart">
+  <button onclick="selesaiBayar()">Pembayaran Selesai</button>
+</div>
+
+<script>
+function selesaiBayar(){
+  alert("Pembayaran berhasil di Alfamart/Alfamidi!");
+  // Kosongkan keranjang & checkout
+  localStorage.removeItem("checkoutData");
+  localStorage.removeItem("cart");
+  location.href="pesanan_berhasil.html";
+}
+</script>
+</body>
+</html>

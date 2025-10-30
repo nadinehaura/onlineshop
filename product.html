@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detail Produk | GreenShop</title>
+<link rel="stylesheet" href="style.css">
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#e7f7e5;}
+.container{max-width:600px;margin:90px auto 40px auto;background:white;padding:20px;border-radius:15px;box-shadow:0 4px 10px rgba(0,0,0,0.15);text-align:center;}
+.container img{width:100%;border-radius:10px;border:4px solid #1b5e20;margin-bottom:15px;}
+.container h2{color:#1b5e20;margin:10px 0;}
+.container p{font-size:18px;color:#2f8a3e;font-weight:bold;margin:5px 0;}
+button.addCart{background:#1b5e20;color:white;border:none;border-radius:20px;padding:10px 16px;cursor:pointer;margin-top:10px;}
+button.addCart:hover{background:#2f8a3e;}
+select,input{width:48%;padding:8px;margin:5px 1%;border-radius:10px;border:1px solid #ccc;}
+.comment-box{text-align:left;margin-top:25px;}
+.comment{background:#f1f9f2;padding:10px;border-radius:10px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:flex-start;}
+.comment-left{display:flex;align-items:center;gap:10px;}
+.comment-left div{text-align:left;}
+.stars{color:gold;font-size:14px;}
+</style>
+</head>
+<body>
+
+<header style="
+  background:#1b5e20;
+  color:white;
+  padding:10px 20px;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  z-index:1000;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  box-sizing:border-box;
+">
+  <div style="font-size:20px;font-weight:bold;">🛍️ GreenShop</div>
+  <div style="display:flex;gap:10px;">
+    <button onclick="location.href='cart.html'" style="padding:5px 12px;border:none;border-radius:10px;cursor:pointer;">🛒 Keranjang</button>
+    <button onclick="location.href='index.html'" style="padding:5px 12px;border:none;border-radius:10px;cursor:pointer;">Beranda</button>
+  </div>
+</header>
+
+<div class="container" id="productDetail">
+  <!-- Isi akan diisi JS -->
+</div>
+
+<script>
+let product = JSON.parse(localStorage.getItem("selectedProduct"));
+if(!product){alert("Produk tidak ditemukan"); location.href="index.html";}
+
+let sales = Math.floor(Math.random()*500 + 50);
+let comments = [
+  {text:"Bagus kualitasnya", rate:"⭐⭐⭐⭐"},
+  {text:"Suka banget warnanya", rate:"⭐⭐⭐⭐⭐"},
+  {text:"Pengiriman cepat", rate:"⭐⭐⭐⭐"}
+];
+
+const div = document.getElementById("productDetail");
+function renderProduct(){
+  div.innerHTML = `
+    <img src="${product.gambar}" alt="${product.nama}">
+    <h2>${product.nama}</h2>
+    <p>Rp ${product.harga.toLocaleString('id-ID')}</p>
+    <p>Terjual: ${sales} pcs</p>
+
+    <div>
+      <input type="number" id="jumlah" min="1" value="1">
+    </div>
+
+    <button class="addCart" onclick="addToCart()">Masukkan Keranjang</button>
+
+    <div class="comment-box">
+      <h3>Komentar Pembeli</h3>
+      <div id="commentList"></div>
+      <textarea id="commentText" placeholder="Tulis komentar..." rows="2" style="width:100%;border-radius:10px;padding:5px;margin-top:5px;"></textarea><br>
+      <label>Rating:
+        <select id="rating">
+          <option value="⭐">⭐</option>
+          <option value="⭐⭐">⭐⭐</option>
+          <option value="⭐⭐⭐">⭐⭐⭐</option>
+          <option value="⭐⭐⭐⭐">⭐⭐⭐⭐</option>
+          <option value="⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐</option>
+        </select>
+      </label><br>
+      <button class="addCart" onclick="addComment()">Kirim Komentar</button>
+    </div>
+  `;
+  showComments();
+}
+
+function showComments(){
+  const cList = document.getElementById("commentList");
+  cList.innerHTML = "";
+  comments.forEach(c=>{
+    cList.innerHTML += `
+      <div class="comment">
+        <div class="comment-left">
+          <div>👤</div>
+          <div>${c.text}</div>
+        </div>
+        <div class="stars">${c.rate}</div>
+      </div>
+    `;
+  });
+}
+
+function addComment(){
+  const text = document.getElementById("commentText").value;
+  const rate = document.getElementById("rating").value;
+  if(text.trim()=="") return alert("Komentar kosong");
+  comments.push({text,rate});
+  document.getElementById("commentText").value="";
+  showComments();
+}
+
+function addToCart(){
+  const cart = JSON.parse(localStorage.getItem("cart")||"[]");
+  const jumlah = parseInt(document.getElementById("jumlah").value);
+  cart.push({...product,jumlah});
+  localStorage.setItem("cart",JSON.stringify(cart));
+  alert("Produk dimasukkan ke keranjang!");
+  location.href="cart.html";
+}
+
+renderProduct();
+</script>
+</body>
+</html>
